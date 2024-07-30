@@ -17,6 +17,7 @@ const io = socketIo(server);
 
 const grupo1 = io.of("/grupo1").on("connection", (socket) => {
   console.log("new connection");
+
   socket.emit("update_messages", messages.grupo1);
 
   socket.on("new_message", (data) => {

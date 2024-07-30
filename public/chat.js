@@ -8,11 +8,11 @@ socket.on("update_messages", (messages) => {
 });
 
 function updateMessagesOnScreen(messages) {
+  console.log(messages);
   const div_messages = document.querySelector("#messages");
-
   let message_list = `<ul>`;
   messages.forEach((message) => {
-    message_list += `<li>${message.user}: ${message.msg}</l1>`;
+    message_list += `<li style="color:${message.color};">${message.user}: ${message.msg}</l1>`;
   });
 
   message_list += `</ul>`;
@@ -33,8 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const message = document.forms["message_form_name"]["msg"].value;
     document.forms["message_form_name"]["msg"].value = "";
 
-    socket.emit("new_message", { user: user, msg: message });
-    console.log(message);
+    socket.emit("new_message", {
+      user: user,
+      msg: message,
+      color: color,
+    });
   });
 
   const userForm = document.querySelector("#user_form");
@@ -42,7 +45,17 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     user = document.forms["user_form_name"]["user"].value;
+    color = randomColor();
 
     userForm.parentNode.removeChild(userForm);
   });
 });
+
+function randomColor() {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
